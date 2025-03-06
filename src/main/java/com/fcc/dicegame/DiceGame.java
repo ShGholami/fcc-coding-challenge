@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Random;
 
 public class DiceGame implements Game {
-    private List<Integer> dice;
     private final Random random = new Random();
     private final int diceCount;
 
@@ -16,7 +15,8 @@ public class DiceGame implements Game {
 
     @Override
     public int play() {
-        dice = rollDice(diceCount);
+        List<Integer> dice = new ArrayList<>();
+        rollDice(dice, diceCount);
         int totalScore = 0;
 
         while (!dice.isEmpty()) {
@@ -27,16 +27,15 @@ public class DiceGame implements Game {
                 totalScore += minDie;
                 dice.remove(Integer.valueOf(minDie));
             }
-            dice = rollDice(dice.size());  // Re-throw remaining dice
+            rollDice(dice, dice.size());  // Re-throw remaining dice
         }
         return totalScore;
     }
 
-    private List<Integer> rollDice(int diceCount) {
-        List<Integer> newRoll = new ArrayList<>();
+    private void rollDice(List<Integer> dice, int diceCount) {
+        dice.clear();
         for (int i = 0; i < diceCount; i++) {
-            newRoll.add(random.nextInt(6) + 1);
+            dice.add(random.nextInt(6) + 1);
         }
-        return newRoll;
     }
 }
