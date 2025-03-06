@@ -1,21 +1,37 @@
 package com.fcc.dicegame;
 
 public class DiceGameSimulator {
-    private static final int NUM_SIMULATIONS = 10000;
-    private static final int NUM_DICE = 5;
+    private final int numSimulations;
+    private final Game game;
+    private final GameStatistics statistics;
 
-    public static void main(String[] args) {
-        Game diceGame = new DiceGame(NUM_DICE);
-        GameStatistics statistics = new GameStatistics();
 
+    public DiceGameSimulator(int numSimulations, Game game, GameStatistics statistics) {
+        this.numSimulations = numSimulations;
+        this.game = game;
+        this.statistics = statistics;
+    }
+
+    public void runSimulation(){
         long startTime = System.nanoTime();
 
-        for (int i = 0; i < NUM_SIMULATIONS; i++) {
-            int score = diceGame.play();
+        for (int i = 0; i < numSimulations; i++) {
+            int score = game.play();
             statistics.recordScore(score);
         }
 
         long endTime = System.nanoTime();
-        statistics.displayResults(NUM_SIMULATIONS, (endTime - startTime) / 1e9);
+        statistics.displayResults(numSimulations, (endTime - startTime) / 1e9);
+    }
+
+    public static void main(String[] args) {
+        int numSimulations = 10_000;
+        int numDice = 5;
+
+        Game game = new DiceGame(numDice);
+        GameStatistics statistics = new GameStatistics();
+        DiceGameSimulator simulator = new DiceGameSimulator(numSimulations, game, statistics);
+
+        simulator.runSimulation();
     }
 }
